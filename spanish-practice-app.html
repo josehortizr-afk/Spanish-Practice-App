@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spanish Practice</title>
+  <style>
+    :root{
+      --bg:#fafafa;
+      --card:#ffffff;
+      --border:#e0e0e0;
+      --text:#212121;
+      --muted:#757575;
+      --primary:#2196f3;
+      --primary-dark:#1976d2;
+      --success:#4caf50;
+      --error:#f44336;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      padding:20px;
+    }
+    .container{max-width:900px;margin:0 auto}
+
+    header{
+      background:var(--card);
+      padding:24px;
+      border-radius:8px;
+      margin-bottom:20px;
+      border:1px solid var(--border);
+    }
+    h1{
+      font-size:28px;
+      font-weight:600;
+      margin-bottom:8px;
+      color:var(--text);
+    }
+    .subtitle{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:16px;
+    }
+
+    .stats{
+      display:flex;
+      gap:16px;
+      justify-content:space-around;
+      padding:16px;
+      background:var(--bg);
+      border-radius:6px;
+      margin-bottom:16px;
+    }
+    .stat-item{text-align:center}
+    .stat-number{
+      font-size:24px;
+      font-weight:600;
+      color:var(--text);
+    }
+    .stat-label{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:20px;
+      border-bottom:1px solid var(--border);
+      padding-bottom:0;
+      flex-wrap:wrap;
+    }
+    .tab{
+      padding:10px 16px;
+      cursor:pointer;
+      font-weight:500;
+      font-size:14px;
+      color:var(--muted);
+      border-bottom:2px solid transparent;
+      transition:all .2s;
+    }
+    .tab:hover{color:var(--text)}
+    .tab.active{
+      color:var(--primary);
+      border-bottom-color:var(--primary);
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      padding:24px;
+      border-radius:8px;
+      margin-bottom:20px;
+    }
+
+    .btn{
+      border:1px solid var(--border);
+      background:white;
+      color:var(--text);
+      padding:10px 18px;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:500;
+      font-size:14px;
+      transition:all .2s;
+    }
+    .btn:hover{
+      background:var(--bg);
+      transform:translateY(-1px);
+    }
+    .btn:active{transform:translateY(0)}
+    .btn.primary{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:white;
+    }
+    .btn.primary:hover{background:var(--primary-dark)}
+    .btn.small{padding:6px 12px;font-size:13px}
+    .btn[disabled]{
+      opacity:0.5;
+      cursor:not-allowed;
+      transform:none;
+      background:#f0f0f0;
+    }
+
+    select{
+      width:100%;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:6px;
+      background:white;
+      font-size:14px;
+      cursor:pointer;
+      margin-bottom:16px;
+    }
+
+    .flashcard-wrapper{
+      perspective:1000px;
+      min-height:280px;
+      margin:24px auto;
+      max-width:540px;
+    }
+    .flashcard{
+      position:relative;
+      width:100%;
+      height:280px;
+      transition:transform .6s;
+      transform-style:preserve-3d;
+      cursor:pointer;
+    }
+    .flashcard.flipped{transform:rotateY(180deg)}
+    .flashcard-face{
+      position:absolute;
+      width:100%;
+      height:100%;
+      backface-visibility:hidden;
+      border-radius:8px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:40px;
+      border:1px solid var(--border);
+      background:white;
+    }
+    .flashcard-front{background:#fafafa}
+    .flashcard-back{transform:rotateY(180deg)}
+    .flashcard-text{
+      font-size:34px;
+      font-weight:700;
+      text-align:center;
+      color:var(--text);
+    }
+    .flashcard-sub{
+      margin-top:12px;
+      font-size:14px;
+      color:var(--muted);
+      text-align:center;
+    }
+    .tag{
+      display:inline-block;
+      font-size:12px;
+      padding:4px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      color:var(--muted);
+      background:white;
+      margin-top:14px;
+    }
+    .flashcard-hint{
+      position:absolute;
+      bottom:16px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .card-counter{
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:16px;
+    }
+    .controls{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-top:20px;
+      flex-wrap:wrap;
+    }
+
+    .prompt{
+      font-size:24px;
+      font-weight:700;
+      margin-bottom:18px;
+      text-align:center;
+      color:var(--text);
+    }
+    .options{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(2, 1fr);
+      margin-bottom:20px;
+    }
+    .option{
+      padding:16px;
+      border-radius:6px;
+      border:1px solid var(--border);
+      background:white;
+      cursor:pointer;
+      font-weight:600;
+      font-size:16px;
+      text-align:center;
+      transition:all .2s;
+    }
+    .option:hover{
+      border-color:var(--primary);
+      background:var(--bg);
+    }
+    .option.correct{
+      background:var(--success);
+      border-color:var(--success);
+      color:white;
+    }
+    .option.wrong{
+      background:var(--error);
+      border-color:var(--error);
+      color:white;
+    }
+    .feedback{
+      text-align:center;
+      font-size:18px;
+      font-weight:600;
+      margin:16px 0;
+      min-height:30px;
+    }
+
+    .audio-btn{
+      padding:30px 45px;
+      font-size:2em;
+      border:2px solid var(--border);
+      background:white;
+      border-radius:50%;
+      cursor:pointer;
+      transition:all .2s;
+      margin:0 auto 18px;
+      display:block;
+    }
+    .audio-btn:hover{
+      background:var(--primary);
+      border-color:var(--primary);
+      transform:scale(1.1);
+    }
+
+    .table-container{overflow-x:auto;margin-top:16px}
+    table{width:100%;border-collapse:collapse;background:white}
+    th{
+      background:var(--bg);
+      padding:12px;
+      text-align:left;
+      font-weight:700;
+      font-size:13px;
+      border:1px solid var(--border);
+    }
+    td{
+      padding:12px;
+      border:1px solid var(--border);
+      font-size:14px;
+      vertical-align:top;
+    }
+    tr:nth-child(even){background:var(--bg)}
+    .category-header{
+      background:var(--primary);
+      color:white;
+      font-weight:700;
+      text-align:center;
+    }
+
+    .how-to-box{
+      background:#e3f2fd;
+      border-radius:8px;
+      padding:12px 16px;
+      font-size:14px;
+      margin-bottom:16px;
+      border:1px solid #bbdefb;
+    }
+    .how-to-box strong{display:block;margin-bottom:4px}
+    .how-to-steps{list-style:none;padding-left:0}
+    .how-to-steps li{margin-bottom:4px}
+
+    @media (max-width: 600px){
+      .options{grid-template-columns:1fr}
+      .stats{flex-direction:column;gap:8px}
+    }
+  
+    /* Scramble */
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background:#fff;
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      user-select:none;
+      font-weight:600;
+      font-size:14px;
+      transition:transform .06s ease, box-shadow .12s ease;
+    }
+    .chip:active{ transform:scale(.98); }
+    .chip.disabled{
+      opacity:.35;
+      cursor:default;
+    }
+    .dropzone{
+      border:1px dashed var(--border);
+      background:rgba(255,255,255,.6);
+      border-radius:16px;
+      padding:12px;
+      margin-top:10px;
+      min-height:52px;
+    }
+    .hint{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Spanish Practice</h1>
+      <p class="subtitle">Practice greetings, questions, and farewells (click, listen, and quiz!)</p>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-number" id="correct">0</div>
+          <div class="stat-label">Correct ✅</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="streak">0</div>
+          <div class="stat-label">Streak 🔥</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="total">0</div>
+          <div class="stat-label">Played 🎯</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="tabs" id="tabs"></div>
+    <div class="card" id="view"></div>
+  </div>
+
+  <script>
+  // ===== Adjectives Database (imported) =====
+  const adjectives = {
+      'Physical Description': [
+        { word: 'alto/a', wordEn: 'tall (person) / high (object)', masculine: 'alto', feminine: 'alta' },
+        { word: 'bajo/a', wordEn: 'short (height) / low', masculine: 'bajo', feminine: 'baja' },
+        { word: 'delgado/a', wordEn: 'thin', masculine: 'delgado', feminine: 'delgada' },
+        { word: 'gordo/a', wordEn: 'fat', masculine: 'gordo', feminine: 'gorda' },
+        { word: 'fuerte', wordEn: 'strong', masculine: 'fuerte', feminine: 'fuerte' },
+        { word: 'débil', wordEn: 'weak', masculine: 'débil', feminine: 'débil' },
+        { word: 'joven', wordEn: 'young', masculine: 'joven', feminine: 'joven' },
+        { word: 'viejo/a', wordEn: 'old', masculine: 'viejo', feminine: 'vieja' },
+        { word: 'guapo/a', wordEn: 'good-looking', masculine: 'guapo', feminine: 'guapa' },
+        { word: 'feo/a', wordEn: 'ugly', masculine: 'feo', feminine: 'fea' }
+      ],
+      'Personality & Character': [
+        { word: 'simpático/a', wordEn: 'nice, friendly', masculine: 'simpático', feminine: 'simpática' },
+        { word: 'tímido/a', wordEn: 'shy', masculine: 'tímido', feminine: 'tímida' },
+        { word: 'serio/a', wordEn: 'serious', masculine: 'serio', feminine: 'seria' },
+        { word: 'divertido/a', wordEn: 'fun', masculine: 'divertido', feminine: 'divertida' },
+        { word: 'aburrido/a', wordEn: 'boring', masculine: 'aburrido', feminine: 'aburrida' },
+        { word: 'inteligente', wordEn: 'smart', masculine: 'inteligente', feminine: 'inteligente' },
+        { word: 'tonto/a', wordEn: 'silly', masculine: 'tonto', feminine: 'tonta' },
+        { word: 'trabajador(a)', wordEn: 'hardworking', masculine: 'trabajador', feminine: 'trabajadora' },
+        { word: 'perezoso/a', wordEn: 'lazy', masculine: 'perezoso', feminine: 'perezosa' },
+        { word: 'amable', wordEn: 'kind', masculine: 'amable', feminine: 'amable' },
+        { word: 'tranquilo/a', wordEn: 'calm', masculine: 'tranquilo', feminine: 'tranquila' },
+        { word: 'hablador(a)', wordEn: 'talkative', masculine: 'hablador', feminine: 'habladora' }
+      ],
+      'Size & Shape': [
+        { word: 'grande', wordEn: 'big', masculine: 'grande', feminine: 'grande' },
+        { word: 'pequeño/a', wordEn: 'small', masculine: 'pequeño', feminine: 'pequeña' },
+        { word: 'largo/a', wordEn: 'long', masculine: 'largo', feminine: 'larga' },
+        { word: 'corto/a', wordEn: 'short (length)', masculine: 'corto', feminine: 'corta' },
+        { word: 'ancho/a', wordEn: 'wide', masculine: 'ancho', feminine: 'ancha' },
+        { word: 'pesado/a', wordEn: 'heavy', masculine: 'pesado', feminine: 'pesada' },
+        { word: 'redondo/a', wordEn: 'round', masculine: 'redondo', feminine: 'redonda' },
+        { word: 'cuadrado/a', wordEn: 'square', masculine: 'cuadrado', feminine: 'cuadrada' }
+      ],
+      'Condition & Quality': [
+        { word: 'limpio/a', wordEn: 'clean', masculine: 'limpio', feminine: 'limpia' },
+        { word: 'sucio/a', wordEn: 'dirty', masculine: 'sucio', feminine: 'sucia' },
+        { word: 'nuevo/a', wordEn: 'new', masculine: 'nuevo', feminine: 'nueva' },
+        { word: 'viejo/a', wordEn: 'old (thing)', masculine: 'viejo', feminine: 'vieja' },
+        { word: 'roto/a', wordEn: 'broken', masculine: 'roto', feminine: 'rota' },
+        { word: 'abierto/a', wordEn: 'open', masculine: 'abierto', feminine: 'abierta' },
+        { word: 'cerrado/a', wordEn: 'closed', masculine: 'cerrado', feminine: 'cerrada' },
+        { word: 'mojado/a', wordEn: 'wet', masculine: 'mojado', feminine: 'mojada' },
+        { word: 'seco/a', wordEn: 'dry', masculine: 'seco', feminine: 'seca' },
+        { word: 'lleno/a', wordEn: 'full', masculine: 'lleno', feminine: 'llena' }
+      ],
+      'Physical & Emotional States': [
+        { word: 'cansado/a', wordEn: 'tired', masculine: 'cansado', feminine: 'cansada' },
+        { word: 'enfermo/a', wordEn: 'sick', masculine: 'enfermo', feminine: 'enferma' },
+        { word: 'bien', wordEn: 'well', masculine: 'bien', feminine: 'bien' },
+        { word: 'mal', wordEn: 'unwell', masculine: 'mal', feminine: 'mal' },
+        { word: 'feliz', wordEn: 'happy', masculine: 'feliz', feminine: 'feliz' },
+        { word: 'triste', wordEn: 'sad', masculine: 'triste', feminine: 'triste' },
+        { word: 'preocupado/a', wordEn: 'worried', masculine: 'preocupado', feminine: 'preocupada' },
+        { word: 'enojado/a', wordEn: 'angry', masculine: 'enojado', feminine: 'enojada' },
+        { word: 'contento/a', wordEn: 'happy, pleased', masculine: 'contento', feminine: 'contenta' },
+        { word: 'nervioso/a', wordEn: 'nervous', masculine: 'nervioso', feminine: 'nerviosa' },
+        { word: 'emocionado/a', wordEn: 'excited', masculine: 'emocionado', feminine: 'emocionada' },
+        { word: 'relajado/a', wordEn: 'relaxed', masculine: 'relajado', feminine: 'relajada' },
+        { word: 'asustado/a', wordEn: 'scared', masculine: 'asustado', feminine: 'asustada' },
+        { word: 'aburrido/a', wordEn: 'bored', masculine: 'aburrido', feminine: 'aburrida' },
+        { word: 'sorprendido/a', wordEn: 'surprised', masculine: 'sorprendido', feminine: 'sorprendida' }
+      ]
+    };
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => document.querySelectorAll(s);
+
+    // EXACT vocabulary from your sheet (Spanish -> English).
+    const vocab = {
+      "Saludos (Greetings)": [
+        { es: "¡Hola!", en: "Hello!", note: "" },
+        { es: "Buenos días.", en: "Good morning.", note: "" },
+        { es: "Buenas tardes.", en: "Good afternoon.", note: "" },
+        { es: "Buenas noches.", en: "Good evening.", note: "" }
+      ],
+      "Preguntas (Questions)": [
+        { es: "¿Qué tal?", en: "How’s it going?", note: "" },
+        { es: "¿Cómo estás?", en: "How are you?", note: "informal" },
+        { es: "¿Cómo está usted?", en: "How are you?", note: "formal" },
+        { es: "Estoy bien.", en: "I’m fine.", note: "" },
+        { es: "¿Y tú?", en: "And you?", note: "informal" },
+        { es: "¿Y usted?", en: "And you?", note: "formal" },
+        { es: "¿Cómo te llamas?", en: "What is your name?", note: "informal" },
+        { es: "¿Cómo se llama usted?", en: "What is your name?", note: "formal" },
+        { es: "Me llamo ____.", en: "My name is ____.", note: "" },
+        { es: "Mucho gusto.", en: "It’s nice to meet you.", note: "" },
+        { es: "El gusto es mío.", en: "The pleasure is mine.", note: "" },
+        { es: "¿De dónde eres?", en: "Where are you from?", note: "informal" },
+        { es: "¿De dónde es usted?", en: "Where are you from?", note: "formal" },
+        { es: "Soy de ____.", en: "I am from ____.", note: "" }
+      ],
+      "Despedidas (Farewells)": [
+        { es: "¡Adiós!", en: "Goodbye!", note: "" },
+        { es: "¡Chao!", en: "Bye!", note: "" },
+        { es: "Nos vemos.", en: "We’ll see each other.", note: "" },
+        { es: "Hasta luego.", en: "See you later.", note: "" },
+        { es: "Hasta pronto.", en: "See you soon.", note: "" },
+        { es: "Hasta mañana.", en: "See you tomorrow.", note: "" }
+      ]
+    };
+
+    // Flatten all items
+    let allItems = [];
+    Object.keys(vocab).forEach(cat => {
+      vocab[cat].forEach(item => allItems.push({ ...item, category: cat }));
+    });
+
+    // State
+    let state = {
+      mode: "flashcards",
+      category: "All Categories",
+      correct: 0,
+      streak: 0,
+      total: 0,
+      deck: [],
+      currentIndex: 0,
+      flipped: false
+    };
+
+    // Quiz state
+    let quiz = {
+      active: false,
+      deck: [],
+      idx: 0,
+      correct: 0,
+      answers: []
+    };
+
+    const shuffle = (arr) => {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    };
+
+    const speak = (text) => {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "es-ES";
+      u.rate = 0.85;
+      window.speechSynthesis.speak(u);
+    };
+
+    const updateStats = () => {
+      $("#correct").textContent = state.correct;
+      $("#streak").textContent = state.streak;
+      $("#total").textContent = state.total;
+    };
+
+    const getItems = () => {
+      if (state.category === "All Categories") return allItems;
+      return allItems.filter(x => x.category === state.category);
+    };
+
+    // ===== Scramble pool: ALL database vocabulary (Greetings + Adjectives) =====
+    const getScrambleItems = () => {
+      const items = [];
+      // greetings/farewells phrases
+      Object.keys(vocab).forEach(cat => {
+        vocab[cat].forEach(it => items.push({ es: it.es, en: it.en, note: it.note || "" }));
+      });
+      // adjectives (masc + fem)
+      if (typeof adjectives !== "undefined") {
+        Object.keys(adjectives).forEach(cat => {
+          adjectives[cat].forEach(it => {
+            if (it.masculine) items.push({ es: it.masculine, en: `${it.wordEn} (m)`, note: cat });
+            if (it.feminine)  items.push({ es: it.feminine,  en: `${it.wordEn} (f)`, note: cat });
+          });
+        });
+      }
+      // de-dupe by Spanish
+      const seen = new Set();
+      return items.filter(x => {
+        const k = (x.es || "").trim();
+        if (!k || seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+    };
+
+    // ===== Form the Phrase: pre-created basic sentences using adjectives (from the database only) =====
+    const formPhraseItems = [
+      { es: 'La casa es grande.', en: 'The house is big.' },
+      { es: 'La casa es pequeña.', en: 'The house is small.' },
+      { es: 'La escuela es grande.', en: 'The school is big.' },
+      { es: 'La escuela es nueva.', en: 'The school is new.' },
+      { es: 'El perro es grande.', en: 'The dog is big.' },
+      { es: 'El perro es simpático.', en: 'The dog is friendly.' },
+      { es: 'El perro es tranquilo.', en: 'The dog is calm.' },
+      { es: 'El gato es pequeño.', en: 'The cat is small.' },
+      { es: 'El gato es perezoso.', en: 'The cat is lazy.' },
+      { es: 'El caballo es fuerte.', en: 'The horse is strong.' },
+      { es: 'El chico es guapo.', en: 'The boy is handsome.' },
+      { es: 'La chica es guapa.', en: 'The girl is pretty.' },
+      { es: 'El chico es feo.', en: 'The boy is ugly.' },
+      { es: 'El círculo es redondo.', en: 'The circle is round.' },
+      { es: 'El cuadrado es cuadrado.', en: 'The square is square.' },
+      { es: 'La mesa es larga.', en: 'The table is long.' },
+      { es: 'La mesa es ancha.', en: 'The table is wide.' },
+      { es: 'La mochila es pesada.', en: 'The backpack is heavy.' },
+      { es: 'La puerta está abierta.', en: 'The door is open.' },
+      { es: 'La ventana está cerrada.', en: 'The window is closed.' },
+      { es: 'La cocina está limpia.', en: 'The kitchen is clean.' },
+      { es: 'El cuarto está sucio.', en: 'The room is dirty.' },
+      { es: 'La taza está llena.', en: 'The cup is full.' },
+      { es: 'La toalla está mojada.', en: 'The towel is wet.' },
+      { es: 'La clase es divertida.', en: 'The class is fun.' },
+      { es: 'La clase es aburrida.', en: 'The class is boring.' },
+      { es: 'El estudiante está cansado.', en: 'The student is tired.' },
+      { es: 'La estudiante está cansada.', en: 'The student (female) is tired.' },
+      { es: 'El niño está contento.', en: 'The boy is happy.' },
+      { es: 'La niña está triste.', en: 'The girl is sad.' },
+      { es: 'El profesor es inteligente.', en: 'The teacher is intelligent.' }
+    ];
+
+
+
+    // ===== Test/Quiz pool: ALL database vocabulary =====
+    const getTestItems = () => getScrambleItems().map(x => ({
+      es: x.es,
+      en: x.en,
+      note: x.note || ""
+    }));
+
+
+
+
+    const renderTabs = () => {
+      const tabs = ["🃏 Flashcards", "📝 Quiz", "🧩 Form the Phrase", "📚 Database"];
+      const modes = ["flashcards", "quiz", "scramble", "database"];
+      $("#tabs").innerHTML = tabs.map((t, i) =>
+        `<div class="tab ${state.mode === modes[i] ? "active" : ""}" onclick="setMode('${modes[i]}')">${t}</div>`
+      ).join("");
+    };
+
+    window.setMode = (mode) => {
+      state.mode = mode;
+      renderTabs();
+      if (mode === "flashcards") renderFlashcards();
+      if (mode === "quiz") renderQuiz();
+      if (mode === "scramble") renderScramble();
+      if (mode === "database") renderDatabase();
+};
+
+    window.changeCategory = (cat) => {
+      state.category = cat;
+      state.deck = [];
+      state.currentIndex = 0;
+      state.flipped = false;
+
+      // reset quiz when switching categories
+      quiz.active = false;
+      quiz.asked = [];
+      quiz.idx = 0;
+      quiz.correct = 0;
+      quiz.answers = [];
+
+      setMode(state.mode);
+    };
+
+    // === FLASHCARDS ===
+    const renderFlashcards = () => {
+      const items = (quiz.asked && quiz.asked.length) ? quiz.asked : getTestItems();
+      if (!state.deck.length) {
+        state.deck = shuffle(items);
+        state.currentIndex = 0;
+      }
+      const current = state.deck[state.currentIndex];
+
+      $("#view").innerHTML = `
+        <label style="display:block;font-weight:700;margin-bottom:8px;font-size:14px">Select Category</label>
+        <select onchange="changeCategory(this.value)">
+          ${["All Categories", ...Object.keys(vocab)].map(cat =>
+            `<option value="${cat}" ${state.category === cat ? "selected" : ""}>${cat}</option>`
+          ).join("")}
+        </select>
+
+        <div class="flashcard-wrapper">
+          <div class="flashcard ${state.flipped ? "flipped" : ""}" onclick="flipCard()">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-text">${current.es}</div>
+              ${current.note ? `<div class="tag">${current.note}</div>` : ""}
+              <div class="flashcard-hint">Click to see English</div>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <div class="flashcard-text">${current.en}</div>
+              <div class="flashcard-sub">${current.es}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-counter">Card ${state.currentIndex + 1} of ${state.deck.length}</div>
+
+        <div class="controls">
+          <button class="btn" onclick="prevCard()">← Previous</button>
+          <button class="btn" onclick="playFlashcard()">🔊 Listen</button>
+          <button class="btn" onclick="shuffleDeck()">🔀 Shuffle</button>
+          <button class="btn" onclick="nextCard()">Next →</button>
+        </div>
+      `;
+    };
+
+    window.flipCard = () => {
+      state.flipped = !state.flipped;
+      renderFlashcards();
+    };
+    window.nextCard = () => {
+      state.currentIndex = (state.currentIndex + 1) % state.deck.length;
+      state.flipped = false;
+      renderFlashcards();
+    };
+    window.prevCard = () => {
+      state.currentIndex = (state.currentIndex - 1 + state.deck.length) % state.deck.length;
+      state.flipped = false;
+      renderFlashcards();
+    };
+    window.shuffleDeck = () => {
+      state.deck = shuffle(getItems());
+      state.currentIndex = 0;
+      state.flipped = false;
+      renderFlashcards();
+    };
+    window.playFlashcard = () => {
+      const current = state.deck[state.currentIndex];
+      speak(current.es.replace("____", "")); // speak without blank
+    };
+
+    // === LISTENING ===
+    let listeningQ = null;
+
+    const renderListening = () => loadListeningQuestion();
+
+    const loadListeningQuestion = () => {
+      const items = (quiz.asked && quiz.asked.length) ? quiz.asked : getTestItems();
+      listeningQ = items[Math.floor(Math.random() * items.length)];
+
+      const wrong = shuffle(items.filter(x => x.es !== listeningQ.es)).slice(0, 3);
+      const options = shuffle([listeningQ.es, ...wrong.map(x => x.es)]);
+
+      $("#view").innerHTML = `
+        <label style="display:block;font-weight:700;margin-bottom:8px;font-size:14px">Select Category</label>
+        <select onchange="changeCategory(this.value)">
+          ${["All Categories", ...Object.keys(vocab)].map(cat =>
+            `<option value="${cat}" ${state.category === cat ? "selected" : ""}>${cat}</option>`
+          ).join("")}
+        </select>
+
+        <h3 style="text-align:center;margin:6px 0 18px;font-size:18px;font-weight:700">🔊 Listen and Choose</h3>
+
+        <button class="audio-btn" onclick="playAudio()">🔊</button>
+        <div style="text-align:center;color:var(--muted);font-size:14px;margin-bottom:18px">Click to hear the phrase</div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="options" id="listening-options">
+          ${options.map(opt =>
+            `<div class="option" onclick="checkListening('${opt.replace(/'/g, "\\'")}')">${opt}</div>`
+          ).join("")}
+        </div>
+
+        <div class="controls">
+          <button class="btn" onclick="playAudio()">🔁 Play Again</button>
+          <button class="btn small" onclick="loadListeningQuestion()">⏭️ Skip</button>
+        </div>
+      `;
+
+      setTimeout(() => playAudio(), 300);
+    };
+
+    window.playAudio = () => speak(listeningQ.es.replace("____", ""));
+
+    window.loadListeningQuestion = () => loadListeningQuestion();
+
+    window.checkListening = (answer) => {
+      state.total++;
+      const isCorrect = answer === listeningQ.es;
+
+      if (isCorrect) {
+        state.correct++;
+        state.streak++;
+        $("#feedback").innerHTML = `✅ Correct! <span style="color:var(--muted);font-weight:500">(${listeningQ.en})</span>`;
+        $("#feedback").style.color = "var(--success)";
+      } else {
+        state.streak = 0;
+        $("#feedback").innerHTML = `❌ Wrong! Answer: <strong>${listeningQ.es}</strong> <span style="color:var(--muted);font-weight:500">(${listeningQ.en})</span>`;
+        $("#feedback").style.color = "var(--error)";
+      }
+
+      updateStats();
+
+      $$("#listening-options .option").forEach(el => {
+        el.style.pointerEvents = "none";
+        if (el.textContent === listeningQ.es) el.classList.add("correct");
+        if (el.textContent === answer && !isCorrect) el.classList.add("wrong");
+      });
+
+      setTimeout(() => loadListeningQuestion(), 2200);
+    };
+
+    // === QUIZ (Spanish -> English) ===
+    
+
+    // ===== Tests (25 / 50 questions) =====
+    const startTest = (n) => {
+      const pool = getTestItems();
+      const total = n;
+      quiz.testLength = n;
+      quiz.totalQuestions = n;
+      quiz.asked = shuffle(pool).slice(0, total);
+      quiz.idx = 0;
+      quiz.correct = 0;
+      quiz.answers = [];
+      quiz.active = true;
+      renderQuiz();
+    };
+const renderQuiz = () => {
+      if (!quiz.active) return renderQuizMenu();
+      if (quiz.idx >= quiz.asked.length) return renderQuizResults();
+      return renderQuizQuestion();
+    };
+
+    const renderQuizMenu = () => {
+      const items = (quiz.asked && quiz.asked.length) ? quiz.asked : getTestItems();
+      const half = Math.ceil(items.length / 2);
+
+      $("#view").innerHTML = `
+        <label style="display:block;font-weight:700;margin-bottom:8px;font-size:14px">Select Category</label>
+        <select onchange="changeCategory(this.value)">
+          ${["All Categories", ...Object.keys(vocab)].map(cat =>
+            `<option value="${cat}" ${state.category === cat ? "selected" : ""}>${cat}</option>`
+          ).join("")}
+        </select>
+
+        <h3 style="text-align:center;margin-bottom:12px;font-size:18px;font-weight:700">📝 Quiz Mode</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 16px 0">
+        <button class="btn" onclick="startTest(25)">Start 25-question test</button>
+        <button class="btn" onclick="startTest(50)">Start 50-question test</button>
+        <span style="align-self:center;color:var(--muted);font-size:13px">
+          Current: <strong>${quiz.active ? quiz.testLength : 0}</strong> questions
+        </span>
+      </div>
+        <p style="text-align:center;color:var(--muted);margin-bottom:22px">Choose a quiz length (Spanish → English).</p>
+
+        <div class="how-to-box">
+          <strong>How to play:</strong>
+          <ul class="how-to-steps">
+            <li>1️⃣ Read the Spanish phrase.</li>
+            <li>2️⃣ Tap the correct English meaning.</li>
+            <li>3️⃣ Try to beat your streak 🔥</li>
+          </ul>
+        </div>
+
+        <div style="max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
+          <button class="btn primary" onclick="startQuiz('half')" style="padding:18px;font-size:16px">
+            📊 Half Quiz<br>
+            <span style="font-size:13px;font-weight:normal;opacity:0.9">${half} questions</span>
+          </button>
+          <button class="btn primary" onclick="startQuiz('full')" style="padding:18px;font-size:16px">
+            🎯 Full Quiz<br>
+            <span style="font-size:13px;font-weight:normal;opacity:0.9">${items.length} questions</span>
+          </button>
+        </div>
+      `;
+    };
+
+    window.startQuiz = (mode) => {
+      const items = (quiz.asked && quiz.asked.length) ? quiz.asked : getTestItems();
+      const deck = shuffle(items);
+      quiz.asked = (mode === "half") ? deck.slice(0, Math.ceil(items.length / 2)) : deck;
+      quiz.idx = 0;
+      quiz.correct = 0;
+      quiz.answers = [];
+      quiz.active = true;
+      renderQuizQuestion();
+    };
+
+    const renderQuizQuestion = () => {
+      const item = quiz.asked[quiz.idx];
+      const allEn = [...new Set(getItems().map(x => x.en))]; // keep options relevant to category
+      const wrong = shuffle(allEn.filter(x => x !== item.en)).slice(0, 3);
+      const options = shuffle([item.en, ...wrong]);
+
+      const progress = Math.round((quiz.idx / quiz.asked.length) * 100);
+
+      $("#view").innerHTML = `
+        <div style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px">
+            <span style="color:var(--muted)">Question ${quiz.idx + 1} of ${quiz.asked.length}</span>
+            <span style="font-weight:700;color:var(--primary)">${progress}% Complete</span>
+          </div>
+          <div style="background:var(--bg);height:8px;border-radius:4px;overflow:hidden">
+            <div style="background:var(--primary);height:100%;width:${progress}%;transition:width 0.3s"></div>
+          </div>
+        </div>
+
+        <div class="prompt">${item.es}</div>
+        ${item.note ? `<div style="text-align:center;margin:-8px 0 10px"><span class="tag">${item.note}</span></div>` : ""}
+
+        <div class="controls" style="margin-top:0;margin-bottom:10px">
+          <button class="btn small" onclick="speakQuiz()">🔊 Listen</button>
+        </div>
+
+        <div class="feedback" id="quiz-feedback"></div>
+
+        <div class="options" id="quiz-options">
+          ${options.map(opt =>
+            `<div class="option" onclick="answerQuiz('${opt.replace(/'/g, "\\'")}')">${opt}</div>`
+          ).join("")}
+        </div>
+      `;
+    };
+
+    window.speakQuiz = () => {
+      const item = quiz.asked[quiz.idx];
+      speak(item.es.replace("____", ""));
+    };
+
+    window.answerQuiz = (answer) => {
+      const item = quiz.asked[quiz.idx];
+      const isCorrect = answer === item.en;
+
+      state.total++;
+
+      if (isCorrect) {
+        quiz.correct++;
+        state.correct++;
+        state.streak++;
+        $("#quiz-feedback").textContent = "✅ Correct!";
+        $("#quiz-feedback").style.color = "var(--success)";
+      } else {
+        state.streak = 0;
+        $("#quiz-feedback").innerHTML = `❌ Wrong! Answer: <strong>${item.en}</strong>`;
+        $("#quiz-feedback").style.color = "var(--error)";
+      }
+
+      updateStats();
+
+      $$("#quiz-options .option").forEach(el => {
+        el.style.pointerEvents = "none";
+        if (el.textContent === item.en) el.classList.add("correct");
+        if (el.textContent === answer && !isCorrect) el.classList.add("wrong");
+      });
+
+      quiz.answers.push({ es: item.es, correct: item.en, user: answer, ok: isCorrect });
+
+      setTimeout(() => {
+        quiz.idx++;
+        renderQuiz();
+      }, 1400);
+    };
+
+    const renderQuizResults = () => {
+      const pct = quiz.asked.length ? ((quiz.correct / quiz.asked.length) * 100).toFixed(1) : "0.0";
+      const grade = pct >= 90 ? "🏆 Excellent!" :
+                    pct >= 75 ? "🌟 Great Job!" :
+                    pct >= 60 ? "👍 Good!" :
+                    "💪 Keep Practicing!";
+
+      const wrong = quiz.answers.filter(a => !a.ok);
+
+      $("#view").innerHTML = `
+        <h3 style="text-align:center;font-size:24px;font-weight:700;margin-bottom:10px">Quiz Complete!</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 16px 0">
+        <button class="btn" onclick="startTest(25)">Start 25-question test</button>
+        <button class="btn" onclick="startTest(50)">Start 50-question test</button>
+        <span style="align-self:center;color:var(--muted);font-size:13px">
+          Current: <strong>${quiz.active ? quiz.testLength : 0}</strong> questions
+        </span>
+      </div>
+
+        <div style="text-align:center;margin-bottom:22px">
+          <div style="font-size:48px;font-weight:800;color:var(--primary);margin-bottom:8px">${pct}%</div>
+          <div style="font-size:20px;margin-bottom:10px">${grade}</div>
+          <div style="font-size:16px;color:var(--muted)">${quiz.correct} out of ${quiz.asked.length} correct</div>
+        </div>
+
+        ${wrong.length ? `
+          <details style="background:white;padding:16px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
+            <summary style="cursor:pointer;font-weight:700;color:var(--text)">Review Mistakes (${wrong.length})</summary>
+            <div style="margin-top:16px">
+              ${wrong.map(a => `
+                <div style="padding:12px;background:var(--bg);border-radius:6px;margin-bottom:8px">
+                  <div style="font-weight:700;margin-bottom:4px">${a.es}</div>
+                  <div style="font-size:14px;color:var(--error)">Your answer: ${a.user}</div>
+                  <div style="font-size:14px;color:var(--success)">Correct: ${a.correct}</div>
+                </div>
+              `).join("")}
+            </div>
+          </details>
+        ` : ""}
+
+        <div class="controls">
+          <button class="btn primary" onclick="retakeQuiz()">🔄 Retake</button>
+          <button class="btn" onclick="backToQuizMenu()">← Back to Menu</button>
+        </div>
+      `;
+    };
+
+    window.retakeQuiz = () => {
+      const len = quiz.asked.length;
+      // if user took "half", keep half-ish; else full
+      const items = (quiz.asked && quiz.asked.length) ? quiz.asked : getTestItems();
+      const mode = (len <= Math.ceil(items.length / 2)) ? "half" : "full";
+      startQuiz(mode);
+    };
+
+    window.backToQuizMenu = () => {
+      quiz.active = false;
+      quiz.asked = [];
+      quiz.idx = 0;
+      quiz.correct = 0;
+      quiz.answers = [];
+      renderQuizMenu();
+    };
+
+    // === DATABASE ===
+    const renderDatabase = () => {
+      // Shared state for the adjectives filter
+      if (!window.__adjDbState) window.__adjDbState = { category: "All Categories" };
+      const adjCats = Object.keys(adjectives || {});
+      const adjCatOptions = ["All Categories", ...adjCats];
+      const adjCurrent = window.__adjDbState.category;
+
+      let html = `
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">Vocabulary Database</h3>
+
+        <div style="margin-bottom:18px">
+          <h4 style="margin:0 0 10px 0;font-size:15px;font-weight:700">Greetings &amp; Farewells</h4>
+          <div class="table-container"><table>
+            <thead><tr><th>Spanish</th><th>English</th><th>Notes</th></tr></thead>
+            <tbody>
+      `;
+
+      Object.keys(vocab).forEach(cat => {
+        html += `<tr><td colspan="3" class="category-header">${cat}</td></tr>`;
+        vocab[cat].forEach(item => {
+          html += `<tr>
+            <td><strong>${item.es}</strong></td>
+            <td>${item.en}</td>
+            <td>${item.note ? item.note : ""}</td>
+          </tr>`;
+        });
+      });
+
+      html += `
+            </tbody>
+          </table></div>
+        </div>
+
+        <div style="margin-top:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+            <h4 style="margin:0;font-size:15px;font-weight:700">Adjectives</h4>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <span style="font-size:13px;font-weight:700;color:var(--muted)">Category</span>
+              <select onchange="window.__adjDbState.category=this.value; renderDatabase();" style="min-width:220px;margin:0">
+                ${adjCatOptions.map(c => `<option value="${c}" ${c===adjCurrent?'selected':''}>${c}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container"><table>
+            <thead><tr><th>English</th><th>Masculine</th><th>Feminine</th></tr></thead>
+            <tbody>
+      `;
+
+      const addAdjCat = (cat) => {
+        html += `<tr><td colspan="3" class="category-header">${cat}</td></tr>`;
+        (adjectives[cat] || []).forEach(item => {
+          html += `<tr>
+            <td>${item.wordEn}</td>
+            <td><strong>${item.masculine}</strong></td>
+            <td><strong>${item.feminine}</strong></td>
+          </tr>`;
+        });
+      };
+
+      if (adjCurrent === "All Categories") adjCats.forEach(addAdjCat);
+      else addAdjCat(adjCurrent);
+
+      html += `
+            </tbody>
+          </table></div>
+        </div>
+      `;
+
+      $("#view").innerHTML = html;
+    };
+
+
+    // Scramble helpers
+    const normalize = (s) => (s || "")
+      .toLowerCase()
+      .replace(/[¡!¿\?.,]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const scrambleState = {
+      target: null,
+      clue: "",
+      words: [],
+      chosen: []
+    };
+
+    const newScramble = () => {
+      const items = formPhraseItems;
+      const picked = items[Math.floor(Math.random() * items.length)];
+      scrambleState.target = picked.es;
+      scrambleState.clue = picked.en + (picked.note ? ` (${picked.note})` : "");
+      scrambleState.words = shuffle(picked.es.split(" "));
+      scrambleState.chosen = [];
+      renderScramble();
+    };
+
+    const pickWord = (i) => {
+      if (scrambleState.chosen.includes(i)) return;
+      scrambleState.chosen.push(i);
+      renderScramble(false);
+    };
+
+    const unpickWord = (slotIndex) => {
+      scrambleState.chosen.splice(slotIndex, 1);
+      renderScramble(false);
+    };
+
+    const builtPhrase = () => scrambleState.chosen.map(i => scrambleState.words[i]).join(" ");
+
+    const checkScramble = () => {
+      const guess = builtPhrase();
+      state.total += 1;
+      const ok = normalize(guess) === normalize(scrambleState.target);
+
+      if (ok) {
+        state.correct += 1;
+        state.streak += 1;
+        $("#scrambleFeedback").innerHTML = `<div class="feedback ok">✅ Correct! <span class="muted">${scrambleState.target}</span></div>`;
+      } else {
+        state.streak = 0;
+        $("#scrambleFeedback").innerHTML = `<div class="feedback bad">❌ Not quite. <span class="muted">Try again or reveal.</span></div>`;
+      }
+      updateStats();
+    };
+
+    const revealScramble = () => {
+      $("#scrambleFeedback").innerHTML = `<div class="feedback neutral">👀 Answer: <strong>${scrambleState.target}</strong></div>`;
+    };
+
+    const renderScramble = (full = true) => {
+      if (!scrambleState.target) newScramble();
+
+      const chosenWords = scrambleState.chosen.map((idx, slot) =>
+        `<span class="chip" onclick="unpickWord(${slot})">${scrambleState.words[idx]}</span>`
+      ).join("");
+
+      const availableWords = scrambleState.words.map((w, i) => {
+        const used = scrambleState.chosen.includes(i);
+        return `<span class="chip ${used ? "disabled" : ""}" onclick="${used ? "" : `pickWord(${i})`}">${w}</span>`;
+      }).join("");
+
+      const top = "";
+
+      if (full) {
+        $("#view").innerHTML = `
+          ${top}
+          <h3 style="font-size:18px;font-weight:800;margin:14px 0 6px">Form the Phrase</h3>
+          <div class="hint">Read the English phrase. Read the English sentence. Click the Spanish words to put them in the correct order.</div>
+          <div class="hint"><strong>English:</strong> ${scrambleState.clue}</div>
+
+          <div style="margin-top:12px">
+            <div style="font-weight:700">English clue:</div>
+            <div style="margin-top:6px">${scrambleState.clue}</div>
+          </div>
+
+          <div style="margin-top:14px">
+            <div style="font-weight:700">Your phrase:</div>
+            <div class="dropzone chips" id="chosenZone">
+              ${chosenWords || `<span class="hint">Click words below to build the phrase…</span>`}
+            </div>
+          </div>
+
+          <div style="margin-top:14px">
+            <div style="font-weight:700">Words:</div>
+            <div class="chips" id="wordsZone">${availableWords}</div>
+          </div>
+
+          <div class="actions" style="margin-top:16px">
+            <button class="btn" onclick="newScramble()">New 🔁</button>
+            <button class="btn primary" onclick="checkScramble()">Check ✅</button>
+            <button class="btn" onclick="revealScramble()">Reveal 👀</button>
+          </div>
+
+          <div id="scrambleFeedback" style="margin-top:14px"></div>
+        `;
+      } else {
+        $("#chosenZone").innerHTML = chosenWords || `<span class="hint">Click words below to build the phrase…</span>`;
+        $("#wordsZone").innerHTML = availableWords;
+      }
+    };
+
+    window.newScramble = newScramble;
+    window.pickWord = pickWord;
+    window.unpickWord = unpickWord;
+    window.checkScramble = checkScramble;
+    window.revealScramble = revealScramble;
+    window.renderScramble = renderScramble;
+    window.resetScramble = () => { scrambleState.target = null; };
+
+    // Init
+    renderTabs();
+    setMode("flashcards");
+    updateStats();
+
+</script>
+</body>
+</html>
